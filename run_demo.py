@@ -9,9 +9,9 @@ import time
 import gradio as gr
 from prompt_template import PROMPT_TEMPLATE
 
-DOCUMENTATION_CSV_PATH = "/home/ubuntu/Desktop/repos/aktion-tier/data_processing/aktion_tier_dataset.csv"
+DOCUMENTATION_PATH = ".data/"
 
-LLAMA_CPP_MODEL_PATH = "./models/mixtral-8x7b-instruct-v0-1-GGUF/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf"
+LLAMA_CPP_MODEL_PATH = "./models/zephyr-7b-beta.Q5_K_M.gguf"
 
 
 def main(instructions: str, history: list):
@@ -21,12 +21,6 @@ def main(instructions: str, history: list):
     end_time = time.time()
     runtime = round(end_time - start_time, 2)
     return response
-
-
-def slow_echo(message, history):
-    for i in range(len(message)):
-        time.sleep(0.05)
-        yield "You typed: " + message[: i+1]
 
 
 def generate_response(instructions: str, history: list=[]):
@@ -52,7 +46,7 @@ def generate_response(instructions: str, history: list=[]):
 @lru_cache(maxsize=None)
 def load_sparse_vector_db() -> TFIDFRetriever:
     """Load the sparse vector database"""
-    dataset = pd.read_csv(DOCUMENTATION_CSV_PATH)
+    dataset = pd.read_csv(DOCUMENTATION_PATH)
     # Concatenate each row of the dataframe into a single string
     dataset_list = dataset.to_dict("records")
     dataset_list = [str(row) for row in dataset_list]
